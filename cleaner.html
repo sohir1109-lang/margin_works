@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>YADOKARI Ops - ③ 清掃外注スタッフ画面 (スマホ)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-slate-200 text-slate-800 font-sans min-h-screen flex flex-col items-center justify-center p-4">
+
+  <!-- 画面切り替えナビ（確認用） -->
+  <div class="mb-4 flex space-x-2 text-xs">
+    <a href="admin.html" class="px-3 py-1.5 rounded-lg font-bold bg-slate-700 text-slate-200 hover:bg-slate-600">① 管理者 (PC)</a>
+    <a href="mover.html" class="px-3 py-1.5 rounded-lg font-bold bg-slate-700 text-slate-200 hover:bg-slate-600">② 引越外注 (スマホ)</a>
+    <a href="cleaner.html" class="px-3 py-1.5 rounded-lg font-bold bg-purple-600 text-white shadow">③ 清掃外注 (スマホ)</a>
+  </div>
+
+  <!-- スマホフレーム -->
+  <div class="w-full max-w-[390px] bg-white rounded-[2.5rem] shadow-2xl border-[8px] border-slate-800 overflow-hidden flex flex-col min-h-[760px] justify-between">
+    
+    <div>
+      <!-- ヘッダー -->
+      <div class="bg-purple-950 text-white px-5 pt-4 pb-4">
+        <div class="flex justify-between items-center text-[11px] text-purple-300 mb-2">
+          <span>10:02</span>
+          <div class="space-x-1"><i class="fa-solid fa-signal"></i><i class="fa-solid fa-wifi"></i><i class="fa-solid fa-battery-full"></i></div>
+        </div>
+        <div class="flex justify-between items-center">
+          <div>
+            <span id="clean-mode-badge" class="text-[10px] bg-purple-400 text-slate-950 font-extrabold px-2 py-0.5 rounded">通常ターンオーバー清掃</span>
+            <h1 class="font-bold text-base mt-1">物件A：新宿サニーサイド 301</h1>
+          </div>
+          <div class="text-right">
+            <span class="text-[11px] text-purple-200 block">確定報酬</span>
+            <span id="clean-reward" class="text-base font-extrabold text-purple-300">¥3,500</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 清掃モード切替タブ（通常 vs 180日目撤収パッキング） -->
+      <div class="grid grid-cols-2 bg-slate-100 p-1 m-3 rounded-xl border border-slate-200">
+        <button id="tab-normal" onclick="switchCleanMode('normal')" class="py-1.5 text-[11px] font-bold rounded-lg bg-white shadow-sm text-purple-700">
+          ① 通常ゲスト清掃
+        </button>
+        <button id="tab-pack" onclick="switchCleanMode('pack')" class="py-1.5 text-[11px] font-bold rounded-lg text-slate-500">
+          ② 引越前・撤収梱包
+        </button>
+      </div>
+
+      <div class="px-4 space-y-3">
+        <!-- 入室キー＆基本情報 -->
+        <div class="bg-purple-50 border border-purple-200 rounded-xl p-3 flex justify-between items-center">
+          <div>
+            <span class="text-[10px] font-bold text-purple-800 block">10:00〜15:00 有効スマートロック</span>
+            <span class="font-mono font-extrabold text-base text-purple-950 tracking-widest">3312#</span>
+          </div>
+          <div class="text-right">
+            <span id="checkin-badge" class="text-[10px] bg-red-100 text-red-700 font-bold px-2 py-0.5 rounded block">次回ゲスト 16:00 IN</span>
+            <a href="https://maps.google.com" target="_blank" class="text-xs text-blue-600 font-bold underline mt-1 inline-block">Googleマップ経路</a>
+          </div>
+        </div>
+
+        <!-- 作業チェックリスト -->
+        <div class="bg-white border border-slate-200 rounded-xl p-3">
+          <span class="text-xs font-bold text-slate-700 block mb-2">
+            <i class="fa-solid fa-list-check mr-1 text-purple-600"></i><span id="clean-list-title">通常メイキング項目</span>
+          </span>
+          
+          <!-- 通常清掃リスト -->
+          <div id="normal-list" class="space-y-1.5 text-xs">
+            <label class="flex items-center space-x-2 p-1.5 bg-slate-50 rounded cursor-pointer">
+              <input type="checkbox" checked class="w-4 h-4 text-purple-600 rounded">
+              <span>換気・ゴミ回収・使用済みリネン剥がし</span>
+            </label>
+            <label class="flex items-center space-x-2 p-1.5 bg-slate-50 rounded cursor-pointer">
+              <input type="checkbox" class="w-4 h-4 text-purple-600 rounded">
+              <span>ベッドメイキング（ダブル×2、シングル×2）</span>
+            </label>
+            <label class="flex items-center space-x-2 p-1.5 bg-slate-50 rounded cursor-pointer">
+              <input type="checkbox" class="w-4 h-4 text-purple-600 rounded">
+              <span>水回り（浴室排水溝・トイレ・洗面台）</span>
+            </label>
+          </div>
+
+          <!-- 180日目・撤収パッキングリスト -->
+          <div id="pack-list" class="hidden space-y-1.5 text-xs">
+            <div class="bg-amber-50 border border-amber-200 p-2 rounded text-[11px] text-amber-900 font-bold mb-1">
+              ⚠️ 本日は180日満了日です！ベッドメイキングは行わず、13時の引越便に向けて資材を梱包してください。
+            </div>
+            <label class="flex items-center space-x-2 p-1.5 bg-slate-50 rounded cursor-pointer">
+              <input type="checkbox" class="w-4 h-4 text-purple-600 rounded">
+              <span class="font-bold">布団一式を圧縮袋に入れ「PKG-001/002」バッグへ収納</span>
+            </label>
+            <label class="flex items-center space-x-2 p-1.5 bg-slate-50 rounded cursor-pointer">
+              <input type="checkbox" class="w-4 h-4 text-purple-600 rounded">
+              <span class="font-bold">民泊標識・非常灯を外し「PKG-003」BOXへ収納</span>
+            </label>
+            <label class="flex items-center space-x-2 p-1.5 bg-slate-50 rounded cursor-pointer">
+              <input type="checkbox" class="w-4 h-4 text-purple-600 rounded">
+              <span>梱包した4パッケージを玄関内側に集積</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- 消耗品の残量アラート報告 -->
+        <div class="bg-white border border-slate-200 rounded-xl p-3">
+          <div class="flex justify-between items-center mb-1.5">
+            <span class="text-xs font-bold text-slate-700"><i class="fa-solid fa-pump-soap mr-1 text-purple-600"></i>消耗品 残量2割以下アラート</span>
+            <span class="text-[10px] text-slate-400">※少ないものだけタップ</span>
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            <button onclick="reportStock(this, 'トイレットペーパー')" class="border border-slate-300 rounded-lg py-1.5 px-2 text-xs font-bold text-slate-600 hover:bg-slate-50 flex items-center justify-center">
+              <i class="fa-solid fa-toilet-paper mr-1.5"></i>紙類が少ない
+            </button>
+            <button onclick="reportStock(this, 'シャンプー・洗剤')" class="border border-slate-300 rounded-lg py-1.5 px-2 text-xs font-bold text-slate-600 hover:bg-slate-50 flex items-center justify-center">
+              <i class="fa-solid fa-bottle-droplet mr-1.5"></i>洗剤が少ない
+            </button>
+          </div>
+        </div>
+
+        <!-- 証跡写真 ＆ 忘れ物・破損報告 -->
+        <div class="grid grid-cols-3 gap-2 text-center">
+          <div onclick="takePhoto(this, '寝室・梱包')" class="border-2 border-dashed border-slate-300 rounded-xl p-2 bg-slate-50 cursor-pointer hover:border-purple-400">
+            <i class="fa-solid fa-camera text-slate-400"></i>
+            <p class="text-[10px] font-bold text-slate-600 mt-1">①寝室・梱包</p>
+          </div>
+          <div onclick="takePhoto(this, '浴室・洗面')" class="border-2 border-dashed border-slate-300 rounded-xl p-2 bg-slate-50 cursor-pointer hover:border-purple-400">
+            <i class="fa-solid fa-camera text-slate-400"></i>
+            <p class="text-[10px] font-bold text-slate-600 mt-1">②浴室・洗面</p>
+          </div>
+          <div onclick="reportIssue()" class="border border-red-200 rounded-xl p-2 bg-red-50 cursor-pointer hover:bg-red-100">
+            <i class="fa-solid fa-triangle-exclamation text-red-500"></i>
+            <p class="text-[10px] font-bold text-red-700 mt-1">忘れ物・破損</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 完了報告ボタン -->
+    <div class="p-4 bg-white border-t border-slate-200">
+      <button onclick="completeCleaning()" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 rounded-xl shadow-lg transition flex items-center justify-center text-sm">
+        <i class="fa-solid fa-circle-check mr-2"></i>証跡写真を送信して清掃完了
+      </button>
+    </div>
+
+  </div>
+
+  <script>
+    function switchCleanMode(mode) {
+      const tabNormal = document.getElementById('tab-normal');
+      const tabPack = document.getElementById('tab-pack');
+      const listNormal = document.getElementById('normal-list');
+      const listPack = document.getElementById('pack-list');
+      const badge = document.getElementById('clean-mode-badge');
+      const checkinBadge = document.getElementById('checkin-badge');
+      const reward = document.getElementById('clean-reward');
+      const title = document.getElementById('clean-list-title');
+
+      if (mode === 'normal') {
+        tabNormal.className = "py-1.5 text-[11px] font-bold rounded-lg bg-white shadow-sm text-purple-700";
+        tabPack.className = "py-1.5 text-[11px] font-bold rounded-lg text-slate-500";
+        listNormal.classList.remove('hidden');
+        listPack.classList.add('hidden');
+        badge.innerText = "通常ターンオーバー清掃";
+        badge.className = "text-[10px] bg-purple-400 text-slate-950 font-extrabold px-2 py-0.5 rounded";
+        checkinBadge.innerText = "次回ゲスト 16:00 IN";
+        checkinBadge.className = "text-[10px] bg-red-100 text-red-700 font-bold px-2 py-0.5 rounded block";
+        reward.innerText = "¥3,500";
+        title.innerText = "通常メイキング項目";
+      } else {
+        tabPack.className = "py-1.5 text-[11px] font-bold rounded-lg bg-white shadow-sm text-amber-700";
+        tabNormal.className = "py-1.5 text-[11px] font-bold rounded-lg text-slate-500";
+        listNormal.classList.add('hidden');
+        listPack.classList.remove('hidden');
+        badge.innerText = "180日満了・撤収パッキング清掃";
+        badge.className = "text-[10px] bg-amber-400 text-slate-950 font-extrabold px-2 py-0.5 rounded";
+        checkinBadge.innerText = "13:00 引越ドライバー到着";
+        checkinBadge.className = "text-[10px] bg-amber-100 text-amber-800 font-bold px-2 py-0.5 rounded block";
+        reward.innerText = "¥4,500 (梱包手当含)";
+        title.innerText = "引越用パッキング指示書";
+      }
+    }
+
+    function reportStock(btn, itemName) {
+      btn.className = "border border-amber-500 bg-amber-100 rounded-lg py-1.5 px-2 text-xs font-bold text-amber-900 flex items-center justify-center";
+      btn.innerHTML = `<i class="fa-solid fa-check mr-1"></i>${itemName} 報告済`;
+      alert(`管理者画面へ「${itemName}」の補充アラートを送信しました！`);
+    }
+
+    function takePhoto(el, label) {
+      el.className = "border-2 border-purple-600 rounded-xl p-2 bg-purple-50 cursor-pointer";
+      el.innerHTML = `<i class="fa-solid fa-circle-check text-purple-600"></i><p class="text-[10px] font-bold text-purple-800 mt-1">${label} 撮影済</p>`;
+    }
+
+    function reportIssue() {
+      const memo = prompt("発見した忘れ物や破損状況を入力してください：", "テーブルの上にゲストの充電器あり");
+      if (memo) {
+        alert(`管理者へ緊急通知を送信しました：\n「${memo}」`);
+      }
+    }
+
+    function completeCleaning() {
+      alert("清掃完了報告と証跡写真（自動圧縮済）を送信しました！");
+    }
+  </script>
+</body>
+</html>
