@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>YADOKARI Ops - ② 引越外注スタッフ画面 (スマホ)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-slate-200 text-slate-800 font-sans min-h-screen flex flex-col items-center justify-center p-4">
+
+  <!-- 画面切り替えナビ（確認用） -->
+  <div class="mb-4 flex space-x-2 text-xs">
+    <a href="admin.html" class="px-3 py-1.5 rounded-lg font-bold bg-slate-700 text-slate-200 hover:bg-slate-600">① 管理者 (PC)</a>
+    <a href="mover.html" class="px-3 py-1.5 rounded-lg font-bold bg-emerald-600 text-white shadow">② 引越外注 (スマホ)</a>
+    <a href="cleaner.html" class="px-3 py-1.5 rounded-lg font-bold bg-slate-700 text-slate-200 hover:bg-slate-600">③ 清掃外注 (スマホ)</a>
+  </div>
+
+  <!-- スマホフレーム -->
+  <div class="w-full max-w-[390px] bg-white rounded-[2.5rem] shadow-2xl border-[8px] border-slate-800 overflow-hidden flex flex-col min-h-[750px] justify-between">
+    
+    <div>
+      <!-- ヘッダー -->
+      <div class="bg-slate-900 text-white px-5 pt-4 pb-4">
+        <div class="flex justify-between items-center text-[11px] text-slate-400 mb-2">
+          <span>13:05</span>
+          <div class="space-x-1"><i class="fa-solid fa-signal"></i><i class="fa-solid fa-wifi"></i><i class="fa-solid fa-battery-full"></i></div>
+        </div>
+        <div class="flex justify-between items-center">
+          <div>
+            <span class="text-[10px] bg-emerald-500 text-slate-950 font-extrabold px-2 py-0.5 rounded">引越クエスト (13:00-15:30)</span>
+            <h1 class="font-bold text-base mt-1">新宿A ➔ 渋谷B 資材移動</h1>
+          </div>
+          <div class="text-right">
+            <span class="text-[11px] text-slate-300 block">確定報酬</span>
+            <span class="text-base font-extrabold text-emerald-400">¥5,000</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 便（トリップ）切り替えタブ -->
+      <div class="grid grid-cols-2 bg-slate-100 p-1 m-3 rounded-xl border border-slate-200">
+        <button id="trip1-btn" onclick="switchTrip(1)" class="py-1.5 text-xs font-bold rounded-lg bg-white shadow-sm text-emerald-700">
+          第1便 (90/100pt)
+        </button>
+        <button id="trip2-btn" onclick="switchTrip(2)" class="py-1.5 text-xs font-bold rounded-lg text-slate-500">
+          第2便 (70/100pt)
+        </button>
+      </div>
+
+      <div class="px-4 space-y-3">
+        <!-- STEP 1：搬出元 -->
+        <div class="bg-amber-50 border border-amber-200 rounded-xl p-3">
+          <div class="flex justify-between items-start">
+            <div>
+              <span class="text-[10px] font-bold bg-amber-500 text-white px-2 py-0.5 rounded">STEP 1：搬出元（積込）</span>
+              <h2 class="font-bold text-sm mt-1">物件A：新宿サニーサイド 301</h2>
+              <p class="text-xs text-slate-600">新宿区〇〇 1-2-3（⚠️EVなし3階）</p>
+            </div>
+            <a href="https://maps.google.com" target="_blank" class="bg-blue-600 text-white text-xs font-bold px-3 py-2 rounded-lg shadow-sm flex items-center">
+              <i class="fa-solid fa-location-arrow mr-1"></i>ナビ
+            </a>
+          </div>
+          <div class="mt-2 pt-2 border-t border-amber-200/60 flex justify-between items-center text-xs">
+            <span class="text-amber-900 font-bold"><i class="fa-solid fa-key mr-1"></i>時限スマートロック:</span>
+            <span class="font-mono font-extrabold bg-white px-2 py-0.5 rounded border border-amber-300 text-sm tracking-widest">4829#</span>
+          </div>
+        </div>
+
+        <!-- 積込QRリスト -->
+        <div class="bg-white border border-slate-200 rounded-xl p-3">
+          <div class="flex justify-between items-center mb-2">
+            <span class="text-xs font-bold text-slate-700"><i class="fa-solid fa-qrcode mr-1 text-emerald-600"></i>積込パッケージ確認</span>
+            <button onclick="scanAllQR()" class="text-[11px] bg-slate-800 text-white px-2.5 py-1 rounded-md font-bold">
+              <i class="fa-solid fa-camera mr-1"></i>QR連続スキャン
+            </button>
+          </div>
+
+          <!-- 第1便アイテム -->
+          <div id="trip1-items" class="space-y-2">
+            <label class="flex items-center justify-between p-2 bg-slate-50 rounded-lg border border-slate-200 cursor-pointer">
+              <div class="flex items-center space-x-2.5">
+                <input type="checkbox" class="worker-check w-4 h-4 text-emerald-600 rounded">
+                <div>
+                  <p class="text-xs font-bold">寝具セットA（ダブル×2）</p>
+                  <span class="text-[10px] text-emerald-600 font-bold">✓ 玄関内側に梱包済 (PKG-001)</span>
+                </div>
+              </div>
+              <span class="text-[10px] font-bold bg-slate-200 px-2 py-0.5 rounded">45 pt</span>
+            </label>
+            <label class="flex items-center justify-between p-2 bg-slate-50 rounded-lg border border-slate-200 cursor-pointer">
+              <div class="flex items-center space-x-2.5">
+                <input type="checkbox" class="worker-check w-4 h-4 text-emerald-600 rounded">
+                <div>
+                  <p class="text-xs font-bold">寝具セットB（シングル×2）</p>
+                  <span class="text-[10px] text-emerald-600 font-bold">✓ 玄関内側に梱包済 (PKG-002)</span>
+                </div>
+              </div>
+              <span class="text-[10px] font-bold bg-slate-200 px-2 py-0.5 rounded">45 pt</span>
+            </label>
+          </div>
+
+          <!-- 第2便アイテム（初期非表示） -->
+          <div id="trip2-items" class="hidden space-y-2">
+            <label class="flex items-center justify-between p-2 bg-slate-50 rounded-lg border border-slate-200 cursor-pointer">
+              <div class="flex items-center space-x-2.5">
+                <input type="checkbox" class="worker-check w-4 h-4 text-emerald-600 rounded">
+                <div>
+                  <p class="text-xs font-bold">民泊専用・消防＆標識キット</p>
+                  <span class="text-[10px] text-slate-500">PKG-003 / 玄関横BOX</span>
+                </div>
+              </div>
+              <span class="text-[10px] font-bold bg-slate-200 px-2 py-0.5 rounded">30 pt</span>
+            </label>
+            <label class="flex items-center justify-between p-2 bg-slate-50 rounded-lg border border-slate-200 cursor-pointer">
+              <div class="flex items-center space-x-2.5">
+                <input type="checkbox" class="worker-check w-4 h-4 text-emerald-600 rounded">
+                <div>
+                  <p class="text-xs font-bold">キッチン＆リネン補充BOX</p>
+                  <span class="text-[10px] text-slate-500">PKG-004 / キッチン下</span>
+                </div>
+              </div>
+              <span class="text-[10px] font-bold bg-slate-200 px-2 py-0.5 rounded">40 pt</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- STEP 2：搬入先 -->
+        <div class="bg-blue-50 border border-blue-200 rounded-xl p-3">
+          <div class="flex justify-between items-start">
+            <div>
+              <span class="text-[10px] font-bold bg-blue-600 text-white px-2 py-0.5 rounded">STEP 2：搬入先（荷降ろし）</span>
+              <h2 class="font-bold text-sm mt-1">物件B：渋谷クリエイティブ 202</h2>
+              <p class="text-xs text-slate-600">渋谷区〇〇 4-5-6（⭕EVあり2階）</p>
+            </div>
+            <a href="https://maps.google.com" target="_blank" class="bg-blue-600 text-white text-xs font-bold px-3 py-2 rounded-lg shadow-sm flex items-center">
+              <i class="fa-solid fa-location-arrow mr-1"></i>ナビ
+            </a>
+          </div>
+          <div class="mt-2 pt-2 border-t border-blue-200/60 flex justify-between items-center text-xs">
+            <span class="text-blue-900 font-bold"><i class="fa-solid fa-key mr-1"></i>搬入先ロック番号:</span>
+            <span class="font-mono font-extrabold bg-white px-2 py-0.5 rounded border border-blue-300 text-sm tracking-widest">9104#</span>
+          </div>
+        </div>
+
+        <!-- STEP 3：証跡写真 -->
+        <div onclick="takePhoto(this)" class="border-2 border-dashed border-slate-300 rounded-xl p-3 text-center bg-slate-50 cursor-pointer hover:border-emerald-500">
+          <i class="fa-solid fa-camera text-slate-400 text-lg"></i>
+          <p class="text-xs font-bold text-slate-600 mt-1">搬入後の室内写真を撮影（必須）</p>
+          <p class="text-[10px] text-slate-400">※傷・破損防止のため荷降ろし後の全体写真を1枚撮影</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 完了ボタン -->
+    <div class="p-4 bg-white border-t border-slate-200">
+      <button id="complete-btn" onclick="completeTrip()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl shadow-lg transition flex items-center justify-center text-sm">
+        <i class="fa-solid fa-circle-check mr-2"></i>第1便の搬入完了を報告する
+      </button>
+    </div>
+
+  </div>
+
+  <script>
+    let currentTrip = 1;
+
+    function switchTrip(num) {
+      currentTrip = num;
+      const btn1 = document.getElementById('trip1-btn');
+      const btn2 = document.getElementById('trip2-btn');
+      const items1 = document.getElementById('trip1-items');
+      const items2 = document.getElementById('trip2-items');
+      const completeBtn = document.getElementById('complete-btn');
+
+      if (num === 1) {
+        btn1.className = "py-1.5 text-xs font-bold rounded-lg bg-white shadow-sm text-emerald-700";
+        btn2.className = "py-1.5 text-xs font-bold rounded-lg text-slate-500";
+        items1.classList.remove('hidden');
+        items2.classList.add('hidden');
+        completeBtn.innerHTML = '<i class="fa-solid fa-circle-check mr-2"></i>第1便の搬入完了を報告する';
+      } else {
+        btn2.className = "py-1.5 text-xs font-bold rounded-lg bg-white shadow-sm text-emerald-700";
+        btn1.className = "py-1.5 text-xs font-bold rounded-lg text-slate-500";
+        items2.classList.remove('hidden');
+        items1.classList.add('hidden');
+        completeBtn.innerHTML = '<i class="fa-solid fa-circle-check mr-2"></i>第2便の搬入完了を報告する';
+      }
+    }
+
+    function scanAllQR() {
+      const container = currentTrip === 1 ? '#trip1-items' : '#trip2-items';
+      document.querySelectorAll(`${container} .worker-check`).forEach(c => c.checked = true);
+      alert(`カメラで第${currentTrip}便のQRコードを連続スキャンしました！`);
+    }
+
+    function takePhoto(el) {
+      el.className = "border-2 border-emerald-500 rounded-xl p-3 text-center bg-emerald-50 cursor-pointer";
+      el.innerHTML = '<i class="fa-solid fa-circle-check text-emerald-600 text-lg"></i><p class="text-xs font-bold text-emerald-800 mt-1">搬入後の全体写真 撮影完了（自動圧縮済）</p>';
+    }
+
+    function completeTrip() {
+      alert(`第${currentTrip}便の搬入完了と証跡写真を送信しました！\n管理者画面の資材現在地が「物件B」に自動更新されます。`);
+    }
+  </script>
+</body>
+</html>
